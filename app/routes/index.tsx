@@ -1,19 +1,32 @@
-import { json, LoaderArgs } from "@remix-run/cloudflare"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/cloudflare"
+import { json } from "@remix-run/cloudflare"
 import { useLoaderData } from "@remix-run/react"
+import FeaturedProducts from "~/components/home/featured-products"
+import Features from "~/components/home/features"
+import Hero from "~/components/home/hero"
+import Jumbotron from "~/components/home/jumbotron"
+import { Product } from "~/interfaces/product.interface"
 
 export const loader = async ({ context }: LoaderArgs) => {
-	const products = await context.services.woocommerce.get("products")
-	return json({ products })
+	const featured = await context.services.woocommerce.get<Product[]>(
+		"products",
+		{
+			featured: true,
+		}
+	)
+
+	return json({ featured })
 }
 
 export default function Index() {
-	const { products } = useLoaderData()
-
-	console.log(products)
+	const { featured } = useLoaderData<SerializeFrom<typeof loader>>()
 
 	return (
-		<>
-			<div></div>
-		</>
+		<div className="space-y-24">
+			<Hero />
+			<FeaturedProducts products={featured} />
+			<Jumbotron />
+			<Features />
+		</div>
 	)
 }

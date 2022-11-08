@@ -1,6 +1,6 @@
 export interface IWoocommerceService {
 	get<T>(endpoint: string): Promise<T>
-	get<T>(endpoint: string, query: Record<string, string>): Promise<T>
+	get<T>(endpoint: string, query: Record<string, any>): Promise<T>
 }
 
 interface InitProps {
@@ -13,8 +13,8 @@ export const WooService = (initProps: InitProps): IWoocommerceService => {
 	const headers = new Headers()
 
 	headers.append(
-		"Authorization",
-		"Basic " + btoa(initProps.consumerKey + ":" + initProps.consumerSecret)
+		'Authorization',
+		'Basic ' + btoa(initProps.consumerKey + ':' + initProps.consumerSecret)
 	)
 
 	return {
@@ -26,8 +26,6 @@ export const WooService = (initProps: InitProps): IWoocommerceService => {
 					url.searchParams.append(key, query[key])
 				)
 			}
-
-			console.log(initProps)
 
 			const response = await fetch(url.href, {
 				headers,

@@ -1,27 +1,23 @@
-import {
-	AppLoadContext,
-	createCookieSessionStorage,
-} from "@remix-run/cloudflare" // or cloudflare/deno
+import { createCookieSessionStorage } from '@remix-run/cloudflare' // or cloudflare/deno
+import { Env } from './env'
 
 interface ICreateSessionStorage {
-	context?: AppLoadContext
+	env: Env
 }
 
-export const createSessionStorage = ({ context }: ICreateSessionStorage) =>
+export const createSessionStorage = ({ env }: ICreateSessionStorage) =>
 	createCookieSessionStorage({
 		// a Cookie from `createCookie` or the CookieOptions to create one
 		cookie: {
-			name: "__session",
+			name: '__session',
 
 			// all of these are optional
 			//domain: 'http://localhost',
 			httpOnly: true,
 			maxAge: 604_800,
-			path: "/",
-			sameSite: "lax",
-			/* secrets: context?.env.COOKIE_SECRET
-				? [context.env.COOKIE_SECRET]
-				: undefined,
-			secure: !!context?.env.COOKIE_SECRET, */
+			path: '/',
+			sameSite: 'lax',
+			secrets: [env.COOKIE_SECRET],
+			secure: false,
 		},
 	})
