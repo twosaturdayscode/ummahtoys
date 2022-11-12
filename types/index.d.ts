@@ -1,7 +1,7 @@
 import '@remix-run/cloudflare'
 import type { SessionStorage } from '@remix-run/cloudflare'
 import type { Env } from '~/env'
-import { IWoocommerceService } from '~/services/woocommerce'
+import type { IWoocommerceService } from '~/services/woocommerce'
 
 declare module '@remix-run/cloudflare' {
 	export interface AppLoadContext {

@@ -1,5 +1,5 @@
 import { IconMinus, IconPlus } from '@tabler/icons'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 interface InputNumberProps {
 	name: string

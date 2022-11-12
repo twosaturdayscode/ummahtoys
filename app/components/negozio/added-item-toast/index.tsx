@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react'
-import { Toast } from 'react-hot-toast'
+import type { Toast } from 'react-hot-toast'
 
 interface AddedItemToastProps {
 	t: Toast

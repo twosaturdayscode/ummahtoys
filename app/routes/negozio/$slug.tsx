@@ -7,8 +7,8 @@ import { json, redirect } from '@remix-run/cloudflare'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import InputNumber from '~/components/negozio/input-number'
 import ProductImagesCarousel from '~/components/negozio/product-carousel'
-import { Cart, CartItem } from '~/interfaces/cart.interface'
-import { Product } from '~/interfaces/product.interface'
+import type { Cart, CartItem } from '~/interfaces/cart.interface'
+import type { Product } from '~/interfaces/product.interface'
 
 export const action = async ({ request, context }: ActionArgs) => {
 	const session = await context.sessionStorage.getSession(

@@ -41,7 +41,7 @@ export const loader = async ({ context, request }: LoaderArgs) => {
 	)
 }
 
-export default function negozioIndex() {
+export default function NegozioIndex() {
 	const { products, categories, message } =
 		useLoaderData<SerializeFrom<typeof loader>>()
 	const [searchParams] = useSearchParams()

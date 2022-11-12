@@ -1,5 +1,5 @@
-import type { Product } from "~/interfaces/product.interface"
-import ProductCard from "~/components/common/product-card"
+import type { Product } from '~/interfaces/product.interface'
+import ProductCard from '~/components/common/product-card'
 
 interface FeaturedProps {
 	products: Product[]

@@ -5,7 +5,7 @@ const SocialLInks = () => {
 				href="https://www.tiktok/@ummahtoys"
 				className="w-5 h-5"
 				title="Tiktok"
-				target={'_blank'}
+				target={'_blank'} rel="noreferrer"
 			>
 				<svg
 					viewBox="0 0 45 45"
@@ -23,7 +23,7 @@ const SocialLInks = () => {
 				href="https://www.facebook.com/UmmahToys"
 				className="w-5 h-5"
 				title="Facebook"
-				target={'_blank'}
+				target={'_blank'} rel="noreferrer"
 			>
 				<svg
 					viewBox="0 0 45 45"
@@ -40,7 +40,7 @@ const SocialLInks = () => {
 				href="https://www.instagram.com/ummahtoys/"
 				className="w-5 h-5"
 				title="Instagram"
-				target={'_blank'}
+				target={'_blank'} rel="noreferrer"
 			>
 				<svg
 					viewBox="0 0 45 45"

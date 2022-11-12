@@ -1,5 +1,5 @@
 import { createCookieSessionStorage } from '@remix-run/cloudflare' // or cloudflare/deno
-import { Env } from './env'
+import type { Env } from './env'
 
 interface ICreateSessionStorage {
 	env: Env

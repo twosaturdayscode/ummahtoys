@@ -1,4 +1,8 @@
-import { MetaFunction, LinksFunction, LoaderArgs } from '@remix-run/cloudflare'
+import type {
+	MetaFunction,
+	LinksFunction,
+	LoaderArgs,
+} from '@remix-run/cloudflare'
 import { json } from '@remix-run/cloudflare'
 import {
 	Links,
@@ -18,7 +22,7 @@ import { Menu } from './components/common/menu'
 import CartButton from './components/common/menu/CartButton'
 import HeaderLogo from './components/common/menu/HeaderLogo'
 import Nav from './components/common/menu/Nav'
-import { Cart } from './interfaces/cart.interface'
+import type { Cart } from './interfaces/cart.interface'
 import { sumDuplicatesInCart } from '~/utils/sum-duplicate-items'
 import NProgress from 'nprogress'
 
@@ -75,7 +79,7 @@ export default function App() {
 		if (state === 'loading') NProgress.start()
 		// when the state is idle then we can to complete the progress bar
 		if (state === 'idle') NProgress.done()
-	}, [transition.state])
+	}, [transition.state, state])
 
 	return (
 		<html lang="it">

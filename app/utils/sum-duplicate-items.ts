@@ -1,4 +1,4 @@
-import { Cart } from '~/interfaces/cart.interface'
+import type { Cart } from '~/interfaces/cart.interface'
 
 export function sumDuplicatesInCart(cartWithDuplicates: Cart) {
 	return cartWithDuplicates.reduce((acc, currentItem) => {
