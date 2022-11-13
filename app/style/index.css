@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	font-family: 'Cera Pro';
+	src: url('/fonts/Cera Pro Black.otf');
+	font-weight: 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Cera Pro';
+	src: url('/fonts/Cera Pro Bold.otf');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@layer base {
+	html {
+		font-family: Quicksand, system-ui, sans-serif;
+		position: relative;
+		@apply text-zinc-700;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-family: 'Cera Pro';
+	}
+}
