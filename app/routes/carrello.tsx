@@ -4,33 +4,35 @@ import type {
 	ActionArgs,
 } from '@remix-run/cloudflare'
 import type { Product } from '~/interfaces/product.interface'
-import type { Cart } from '~/interfaces/cart.interface'
 
 import { useMemo } from 'react'
 import { json } from '@remix-run/cloudflare'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { IconTrash } from '@tabler/icons'
 import InputNumber from '~/components/negozio/input-number'
-import { sumDuplicatesInCart } from '~/utils/sum-duplicate-items'
+import { fromSession } from '~/models/cart'
 
 export const action = async ({ request, context }: ActionArgs) => {
 	const session = await context.sessionStorage.getSession(
 		request.headers.get('Cookie')
 	)
-	let sessionCart = session.get('cart') as Cart
+
+	const sessionCart = fromSession(session)
 
 	const { _action, id } = Object.fromEntries(await request.formData())
+	const itemId = Number(id)
 
-	const productIndex = sessionCart.findIndex(item => String(item.id) === id)
+	if (_action === 'increase') {
+		sessionCart[itemId]++
+	}
 
-	if (_action === 'increase') sessionCart[productIndex].quantity++
-	if (_action === 'decrease' && sessionCart[productIndex].quantity > 1)
-		sessionCart[productIndex].quantity--
+	if (_action === 'decrease') {
+		sessionCart[itemId]--
+	}
 
-	if (_action === 'remove')
-		sessionCart = sessionCart.filter(
-			item => item.id !== sessionCart[productIndex].id
-		)
+	if (_action === 'remove') {
+		delete sessionCart[itemId]
+	}
 
 	session.set('cart', sessionCart)
 
@@ -49,27 +51,26 @@ export const loader = async ({ request, context }: LoaderArgs) => {
 	const session = await context.sessionStorage.getSession(
 		request.headers.get('Cookie')
 	)
-	const sessionCart = session.get('cart') as Cart
+	const sessionCart = fromSession(session)
 
-	let cartProducts: (Product & { quantity: number })[] = []
+	const productPromises = Object.keys(sessionCart).map(itemId =>
+		services.woocommerce.get<Product>(`products/${itemId}`)
+	)
 
-	if (sessionCart) {
-		const normalizedCart = sumDuplicatesInCart(sessionCart)
+	const cartProducts = await Promise.all(productPromises)
 
-		for (const item of normalizedCart) {
-			const product = await services.woocommerce.get<Product>(
-				`products/${item.id}`
-			)
+	const cart = cartProducts.map(product => ({
+		quantity: sessionCart[product.id],
+		...product,
+	}))
 
-			cartProducts.push({ ...product, quantity: item.quantity })
-		}
-	}
-
-	return json({ cart: cartProducts })
+	return json({ cart })
 }
 
 export default function CartPage() {
 	const { cart } = useLoaderData<SerializeFrom<typeof loader>>()
+	console.log(cart)
+
 	const total = useMemo(() => {
 		return cart.reduce(
 			(acc, curr) => acc + curr.quantity * Number(curr.price),
@@ -175,7 +176,18 @@ function CartItemRow({ item }: CartItemRowProps) {
 					<InputNumber
 						name="quantity"
 						initialValue={Number(item.quantity)}
-						mode="uncontrolled"
+						onIncrease={() =>
+							fetcher.submit(
+								{ _action: 'increase', id: String(item.id) },
+								{ method: 'post' }
+							)
+						}
+						onDecrease={() =>
+							fetcher.submit(
+								{ _action: 'decrease', id: String(item.id) },
+								{ method: 'post' }
+							)
+						}
 					/>
 					<button
 						type="submit"

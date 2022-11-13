@@ -1,8 +1,3 @@
 import type { Product } from './product.interface'
 
-export interface CartItem {
-	id: Product['id'] | string
-	quantity: number
-}
-
-export type Cart = CartItem[]
+export type Cart = Record<Product['id'], number>

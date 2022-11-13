@@ -23,7 +23,7 @@ import CartButton from './components/common/menu/CartButton'
 import HeaderLogo from './components/common/menu/HeaderLogo'
 import Nav from './components/common/menu/Nav'
 import type { Cart } from './interfaces/cart.interface'
-import { sumDuplicatesInCart } from '~/utils/sum-duplicate-items'
+import { getCartLength } from '~/utils/get-cart-length'
 import NProgress from 'nprogress'
 
 import nProgressStyles from 'nprogress/nprogress.css'
@@ -46,9 +46,12 @@ export const loader = async ({ context, request }: LoaderArgs) => {
 		request.headers.get('Cookie')
 	)
 	const sessionCart = session.get('cart') as Cart
-	const cartLength = sumDuplicatesInCart(sessionCart).length
+	if (sessionCart) {
+		const cartLength = getCartLength(sessionCart)
+		return json({ cartItemsNumber: cartLength })
+	}
 
-	return json({ cartItemsNumber: cartLength })
+	return json({ cartItemsNumber: 0 })
 }
 
 export default function App() {

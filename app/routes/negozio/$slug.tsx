@@ -7,8 +7,8 @@ import { json, redirect } from '@remix-run/cloudflare'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import InputNumber from '~/components/negozio/input-number'
 import ProductImagesCarousel from '~/components/negozio/product-carousel'
-import type { Cart, CartItem } from '~/interfaces/cart.interface'
 import type { Product } from '~/interfaces/product.interface'
+import { addInCart, fromSession } from '~/models/cart'
 
 export const action = async ({ request, context }: ActionArgs) => {
 	const session = await context.sessionStorage.getSession(
@@ -16,28 +16,14 @@ export const action = async ({ request, context }: ActionArgs) => {
 	)
 
 	const { id, quantity } = Object.fromEntries(await request.formData())
+	const itemId = Number(id)
+	const itemQuantity = Number(quantity)
+
+	const cartInSession = fromSession(session)
+	const cart = addInCart(cartInSession)(itemId, itemQuantity)
+	session.set('cart', cart)
 
 	session.flash('message', 'Prodotto aggiunto al carrello!')
-
-	if (!session.has('cart')) {
-		const newCart = [{ id: id.toString(), quantity: Number(quantity) }]
-		session.set('cart', newCart)
-
-		return redirect('/negozio', {
-			headers: {
-				'Set-Cookie': await context.sessionStorage.commitSession(session),
-			},
-		})
-	}
-
-	const cart = session.get('cart') as Cart
-
-	cart.push({
-		id: id.toString(),
-		quantity: Number(quantity),
-	} as CartItem)
-
-	session.set('cart', cart)
 
 	return redirect('/negozio', {
 		headers: {
